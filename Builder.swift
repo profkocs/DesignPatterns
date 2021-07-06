@@ -50,47 +50,14 @@ class Computer{
         }
         
     }
-    
-    func setMusic(name:String, status:Bool){
-        
-        if(status){
-            
-            // Müziği ismi ile bul ve aç.
-            
-        } else {
-            
-            // Müziği ismi ile bul ve kapat.
-        }
-        
-    }
-    
-    
 }
 
-protocol Car{
+class Car{
     
-    var engine:Engine?{ get set}
-    var computer:Computer?{get set}
-    var seats:Int{get set}
+    var engine:Engine?
+    var computer:Computer?
+    var seats:Int = 0
     
-    func turnOn()
-    func turnOff()
-    func forward()
-    func turnOnAirConditioner()
-    func turnOffAirConditioner()
-    func turnOnMusic(musicName:String, status:Bool)
-    func turnOffMusic(musicName:String, status:Bool)
-    
-}
-
-class Sport:Car{
-    
-    var engine: Engine?
-    
-    var computer: Computer?
-    
-    var seats: Int = 0
-
     func turnOn() {
         
         engine?.start()
@@ -107,26 +74,46 @@ class Sport:Car{
     }
     
     func turnOnAirConditioner() {
+
+        if(computer!= nil){
+
+            computer?.setAirCondition(status: true)
+            return
+        }
+        print("Aracınız bu özelliği desteklemiyor.")
         
-        computer?.setAirCondition(status: true)
     }
     
     func turnOffAirConditioner() {
         
-        computer?.setAirCondition(status: false)
+        if(computer != nil){
+            computer?.setAirCondition(status: false)
+            return
+        }
+        print("Aracınız bu özelliği desteklemiyor.")
+        
     }
     
     func turnOnMusic(musicName:String, status:Bool) {
         
-        computer?.setMusic(name: musicName , status: status)
+        if(computer != nil){
+            computer?.setMusic(name: musicName , status: status)
+            return
+        }
+        print("Aracınız bu özelliği desteklemiyor.")    
     }
     
     func turnOffMusic(musicName:String, status:Bool) {
         
-        computer?.setMusic(name: musicName, status: status)
+        if(computer != nil){
+            computer?.setMusic(name: musicName, status: status)
+            return
+        }
+        print("Aracınız bu özelliği desteklemiyor.") 
     }
     
 }
+
 
 protocol Builder{
     
@@ -165,11 +152,9 @@ class CarBuilder:Builder{
         
         return car!
     }
-    
-    
 }
 
-class SportCarDirector{
+class CarDirector{
     
     private var builder:CarBuilder
     
@@ -181,7 +166,7 @@ class SportCarDirector{
     func makeSportCar(){
         
         builder.setCar(car: getSportCar())
-        builder.setEngine(engine: getEngine())
+        builder.setEngine(engine: getDieselEngine())
         builder.setComputer()
         builder.setSeats(number: 2)
         
@@ -192,7 +177,7 @@ class SportCarDirector{
         return Sport()
     }
     
-    private func getEngine()->Engine{
+    private func getDieselEngine()->Engine{
         
         return DieselEngine()
     }
@@ -205,15 +190,13 @@ class Main{
         
         let builder = CarBuilder()
         
-        let sportCarDirector = SportCarDirector(builder: builder)
+        let sportCarDirector = CarDirector(builder: builder)
         
         sportCarDirector.makeSportCar()
         
         var car = builder.getCar()
         
         car.turnOn()
-        
-        
-    }
     
+    } 
 }
